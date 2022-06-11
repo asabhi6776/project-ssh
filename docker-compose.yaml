@@ -1,0 +1,29 @@
+version: '3'
+services:
+  web:
+    image: asabhi6776/websshv2:1.1
+    container_name: webssh
+    privileged: true
+    ports:
+    - "8888:8888"
+    entrypoint:
+    - /bin/bash
+    - -c
+    - |
+      python run.py
+    networks:
+      ssh-network:
+        ipv4_address: ${WEBSSH_IP}
+  sshhost:
+    image: asabhi6776/ssh_ubuntu:1.7
+    container_name: ssh_host
+    entrypoint:
+    - /usr/sbin/sshd
+    - -D
+    networks:
+      ssh-network:
+        ipv4_address: ${SSHHOST_IP}
+networks:
+  ssh-network:
+    external:
+      name: ssh-network
