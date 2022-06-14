@@ -3,6 +3,7 @@ services:
   web:
     image: asabhi6776/websshv2:1.1
     container_name: webssh
+    restart: unless-stopped
     privileged: true
     ports:
     - "8888:8888"
@@ -14,15 +15,40 @@ services:
     networks:
       ssh-network:
         ipv4_address: ${WEBSSH_IP}
-  sshhost:
-    image: asabhi6776/ssh_ubuntu:1.7
+  react_sshhost:
+    image: asabhi6776/react_ssh:1.1
     container_name: ssh_host
+    restart: unless-stopped
     entrypoint:
     - /usr/sbin/sshd
     - -D
+    volumes:
+    - ./code:/code
     networks:
       ssh-network:
         ipv4_address: ${SSHHOST_IP}
+  code-server:
+    image: lscr.io/linuxserver/code-server:latest
+    container_name: code-server
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - PASSWORD=password #optional
+      - HASHED_PASSWORD= #optional
+      - SUDO_PASSWORD=password #optional
+      - SUDO_PASSWORD_HASH= #optional
+      - PROXY_DOMAIN=code-server.my.domain #optional
+      - DEFAULT_WORKSPACE=/config/workspace #optional
+    volumes:
+      - ./config:/config
+      - ./code:/code
+    ports:
+      - 8443:8443
+    restart: unless-stopped
+    networks:
+      ssh-network:
+        ipv4_address: ${CODE_IP}
 networks:
   ssh-network:
     external:

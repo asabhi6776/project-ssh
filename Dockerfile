@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM node:latest
 
 RUN apt-get update && apt-get install -y openssh-server
 RUN mkdir /var/run/sshd
@@ -13,5 +13,8 @@ EXPOSE 22
 USER manager
 RUN ssh-keygen -A
 USER root 
+RUN mkdir /code
+RUN chmod 777 /code
+WORKDIR /code
 RUN /etc/init.d/ssh start
 CMD ["tail", "-f", "/dev/null"]
