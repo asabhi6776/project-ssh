@@ -1,21 +1,18 @@
 version: '3'
 services:
-  web:
-    image: asabhi6776/websshv2:1.1
-    container_name: webssh
-    privileged: true
+  wetty:
+    image: wettyoss/wetty
+    command: '--ssh-host=172.21.0.6 --ssh-user=manager --ssh-pass=manager123'
     ports:
-    - "8888:8888"
-    entrypoint:
-    - /bin/bash
-    - -c
-    - |
-      python run.py
+      - 3010:3000
+    restart: always
     networks:
       ssh-network:
         ipv4_address: ${WEBSSH_IP}
+    depends_on:
+      - sshhost
   sshhost:
-    image: asabhi6776/ssh_ubuntu:1.7
+    image: asabhi6776/ssh_ubuntu:latest
     container_name: ssh_host
     entrypoint:
     - /usr/sbin/sshd
