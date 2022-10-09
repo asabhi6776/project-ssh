@@ -2,7 +2,7 @@ version: '3'
 services:
   wetty:
     image: wettyoss/wetty
-    command: '--ssh-host=172.21.0.6 --ssh-user=manager --ssh-pass=manager123'
+    command: '--ssh-host=${SSHHOST_IP} --ssh-user=manager --ssh-pass=manager123'
     ports:
       - 3010:3000
     restart: always
